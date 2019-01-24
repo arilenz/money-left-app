@@ -2,8 +2,9 @@ import * as types from "./actionTypes";
 import {
   getDailyLimit,
   updateDailyLimit,
-  getTodayRecord,
-  decreaseTodayRecord
+  getDayRecords,
+  getRecordsTotal,
+  addRecord
 } from "../services/db";
 
 export const changeRoute = name => ({
@@ -42,32 +43,33 @@ export const requestUpdateDailyLimit = value => async dispatch => {
   return true;
 };
 
-export const requestTodayRecord = () => async dispatch => {
+export const requestDaySum = () => async dispatch => {
   dispatch({
-    type: types.REQUEST_TODAY_RECORD
+    type: types.REQUEST_DAY_SUM
   });
 
-  const value = await getTodayRecord();
+  const records = await getDayRecords();
+  const sum = getRecordsTotal(records);
 
   dispatch({
-    type: types.RECEIVE_TODAY_RECORD,
-    payload: { value }
+    type: types.RECEIVE_DAY_SUM,
+    payload: { sum }
   });
 
-  return value;
+  return sum;
 };
 
-export const requestDecreaseTodayValue = value => async dispatch => {
+export const requestAddRecord = amount => async dispatch => {
   dispatch({
-    type: types.REQUEST_DECREASE_TODAY_RECORD,
-    payload: { value }
+    type: types.REQUEST_ADD_RECORD,
+    payload: { amount }
   });
 
-  await decreaseTodayRecord(value);
+  await addRecord(amount);
 
   dispatch({
-    type: types.RECEIVE_DECREASE_TODAY_RECORD,
-    payload: { value }
+    type: types.RECEIVE_ADD_RECORD,
+    payload: { amount }
   });
 
   return true;

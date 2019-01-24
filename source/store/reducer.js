@@ -1,20 +1,27 @@
+import { combineReducers } from "redux";
 import * as types from "./actionTypes";
 
-export default (
+const router = (state = { current: null }, { type, payload }) => {
+  switch (type) {
+    case types.CHANGE_ROURE:
+      return {
+        ...state,
+        current: payload.name
+      };
+
+    default:
+      return { ...state };
+  }
+};
+
+const values = (
   state = {
-    currentRoute: null,
-    rest: 0,
+    daySum: 0,
     dailyLimit: 0
   },
   { type, payload }
 ) => {
   switch (type) {
-    case types.CHANGE_ROURE:
-      return {
-        ...state,
-        currentRoute: payload.name
-      };
-
     case types.RECEIVE_DAILY_LIMIT:
       return {
         ...state,
@@ -24,23 +31,21 @@ export default (
     case types.REQUEST_UPDATE_DAILY_LIMIT:
       return {
         ...state,
-        dailyLimit: payload.value,
-        rest: state.rest - (state.dailyLimit - payload.value)
+        dailyLimit: payload.value
       };
 
-    case types.RECEIVE_TODAY_RECORD:
+    case types.RECEIVE_DAY_SUM:
       return {
         ...state,
-        rest: payload.value
-      };
-
-    case types.REQUEST_DECREASE_TODAY_RECORD:
-      return {
-        ...state,
-        rest: state.rest - payload.value
+        daySum: payload.sum
       };
 
     default:
       return { ...state };
   }
 };
+
+export default combineReducers({
+  router,
+  values
+});

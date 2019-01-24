@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import { todayFormatted } from "../utils/time";
+import { getNow, getMidnight } from "../utils/time";
 
 const storeKeys = {
   dailyLimit: "dailyLimit",
@@ -22,11 +22,7 @@ export const getDailyLimit = async () => {
 
 export const updateDailyLimit = async newDailyLimit => {
   try {
-    const currentDailyLimit = await getDailyLimit();
-    const difference = currentDailyLimit - parseInt(newDailyLimit);
-
     await AsyncStorage.setItem(storeKeys.dailyLimit, newDailyLimit);
-    await decreaseTodayRecord(difference);
   } catch (error) {
     console.error(error);
   }
@@ -35,39 +31,40 @@ export const updateDailyLimit = async newDailyLimit => {
 export const getAllRecords = async () => {
   try {
     const response = await AsyncStorage.getItem(storeKeys.records);
-    const records = response ? JSON.parse(response) : {};
+    const records = response ? JSON.parse(response) : [];
 
     return records;
   } catch (error) {
     console.error(error);
   }
 
-  return {};
+  return [];
 };
 
 export const getRecord = async timestamp => {
-  const dailyLimit = await getDailyLimit();
   const records = await getAllRecords();
-  return records[timestamp] ? parseInt(records[timestamp]) : dailyLimit;
+  return records.find(record => record.timestamp === timestamp);
 };
 
-export const getTodayRecord = async () => await getRecord(todayFormatted());
-
-export const updateRecord = async (timestamp, value) => {
-  const records = await getAllRecords();
-  records[timestamp] = value;
-
+export const addRecord = async amount => {
   try {
+    const records = await getAllRecords();
+    records.push({
+      timestamp: getNow(),
+      amount
+    });
     await AsyncStorage.setItem(storeKeys.records, JSON.stringify(records));
   } catch (error) {
     console.error(error);
   }
 };
 
-export const updateTodayRecord = async value => await updateRecord(todayFormatted(), value);
-
-export const decreaseTodayRecord = async value => {
-  const currentValue = await getTodayRecord();
-  const updatedValue = currentValue - parseInt(value);
-  await updateTodayRecord(updatedValue);
+export const getRecordsByTimeRange = async (from, to) => {
+  const records = await getAllRecords();
+  return records.filter(record => record.timestamp > from && record.timestamp < to);
 };
+
+export const getDayRecords = async () => await getRecordsByTimeRange(getMidnight(), getNow());
+
+export const getRecordsTotal = records =>
+  records.reduce((accumulator, record) => (accumulator += record.amount), 0);

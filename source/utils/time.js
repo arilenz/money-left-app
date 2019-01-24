@@ -1,4 +1,3 @@
-export const todayFormatted = () => {
-  const today = new Date();
-  return `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
-};
+export const getNow = () => new Date().getTime();
+
+export const getMidnight = () => new Date().setHours(0, 0, 0, 0);

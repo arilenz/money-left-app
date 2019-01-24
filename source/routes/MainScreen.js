@@ -7,30 +7,31 @@ import Icon from "../components/Icon";
 import Label from "../components/Label";
 import Input from "../components/Input";
 
-import { requestDecreaseTodayValue } from "../store/actions";
+import { requestAddRecord, requestDaySum } from "../store/actions";
 
 class MainScreen extends Component {
   handleSubmit = value => {
-    this.props.requestDecreaseTodayValue(parseInt(value));
+    this.props.requestAddRecord(parseInt(value)).then(this.props.requestDaySum);
   };
 
   render() {
-    const { changeRoute, rest } = this.props;
+    const { changeRoute, dailyLimit, daySum } = this.props;
 
     return (
       <Screen headerRightAction={<Icon name="settings" onPress={() => changeRoute("settings")} />}>
         <Label style={{ marginBottom: 5 }} text="Money left" />
-        <Text style={{ marginBottom: 50, fontSize: 24 }}>{rest}</Text>
+        <Text style={{ marginBottom: 50, fontSize: 24 }}>{dailyLimit - daySum}</Text>
 
-        <Input onSubmit={this.handleSubmit} keyboardType="numeric" autoFocus />
+        <Input onSubmit={this.handleSubmit} keyboardType="numeric" autoFocus clearOnSubmit />
       </Screen>
     );
   }
 }
 
 export default connect(
-  ({ rest }) => ({
-    rest
+  ({ values: { dailyLimit, daySum } }) => ({
+    dailyLimit,
+    daySum
   }),
-  { requestDecreaseTodayValue }
+  { requestAddRecord, requestDaySum }
 )(MainScreen);

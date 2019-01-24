@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text } from "react-native";
 import { connect } from "react-redux";
+import debugAsyncStorage, { clear } from "../utils/debugAsyncStorage";
 
 import Router from "./Router";
 import Screen from "./Screen";
@@ -8,7 +9,7 @@ import Screen from "./Screen";
 import MainScreen from "../routes/MainScreen";
 import SettingsScreen from "../routes/SettingsScreen";
 
-import { requestDailyLimit, requestTodayRecord } from "../store/actions";
+import { requestDailyLimit, requestDaySum } from "../store/actions";
 
 class App extends Component {
   state = {
@@ -17,7 +18,8 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    Promise.all([this.props.requestDailyLimit(), this.props.requestTodayRecord()])
+    debugAsyncStorage();
+    Promise.all([this.props.requestDailyLimit(), this.props.requestDaySum()])
       .then(() => this.setState({ ready: true }))
       .catch(() => this.setState({ error: true }));
   };
@@ -50,5 +52,5 @@ class App extends Component {
 
 export default connect(
   null,
-  { requestDailyLimit, requestTodayRecord }
+  { requestDailyLimit, requestDaySum }
 )(App);

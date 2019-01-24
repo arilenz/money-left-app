@@ -32,6 +32,6 @@ class SettingsScreen extends Component {
 }
 
 export default connect(
-  ({ dailyLimit }) => ({ dailyLimit }),
+  ({ values: { dailyLimit } }) => ({ dailyLimit }),
   { requestUpdateDailyLimit }
 )(SettingsScreen);
