@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import { Text } from "react-native";
 import { connect } from "react-redux";
 import debugAsyncStorage, { clear } from "../utils/debugAsyncStorage";
+import { Font } from "expo";
 
 import Router from "./Router";
 import Screen from "./Screen";
+import MainContainer from "../components/MainContainer";
 
 import MainScreen from "../routes/MainScreen";
 import SettingsScreen from "../routes/SettingsScreen";
 
-import { requestDailyLimit, requestDaySum } from "../store/actions";
+import { requestDailyLimit, requestPeriods } from "../store/actions";
 
 class App extends Component {
   state = {
@@ -17,11 +19,21 @@ class App extends Component {
     error: false
   };
 
-  componentDidMount = () => {
-    debugAsyncStorage();
-    Promise.all([this.props.requestDailyLimit(), this.props.requestDaySum()])
-      .then(() => this.setState({ ready: true }))
-      .catch(() => this.setState({ error: true }));
+  componentDidMount = async () => {
+    try {
+      debugAsyncStorage();
+      await Font.loadAsync({
+        "DIN Alternate Bold": require("../../assets/fonts/DIN_Alternate_Bold.ttf"),
+        "Avenir Book": require("../../assets/fonts/Avenir_Book.ttf"),
+        "Avenir Heavy": require("../../assets/fonts/Avenir_Heavy.ttf")
+      });
+      await this.props.requestDailyLimit();
+      await this.props.requestPeriods();
+      this.setState({ ready: true });
+    } catch (error) {
+      console.error(error);
+      this.setState({ error: true });
+    }
   };
 
   render() {
@@ -36,15 +48,17 @@ class App extends Component {
       />
     ) : (
       <Screen>
-        {error ? (
-          <>
-            <Text>This app won't work.</Text>
-            <Text>Would you like to kick developer?</Text>
-            <Text>Contact him</Text>
-          </>
-        ) : (
-          <Text>Loading</Text>
-        )}
+        <MainContainer>
+          {error ? (
+            <>
+              <Text>This app won't work.</Text>
+              <Text>Would you like to kick developer?</Text>
+              <Text>Contact him</Text>
+            </>
+          ) : (
+            <Text>Loading</Text>
+          )}
+        </MainContainer>
       </Screen>
     );
   }
@@ -52,5 +66,5 @@ class App extends Component {
 
 export default connect(
   null,
-  { requestDailyLimit, requestDaySum }
+  { requestDailyLimit, requestPeriods }
 )(App);

@@ -18,9 +18,6 @@ class Screen extends Component {
           <View
             style={{
               flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
               backgroundColor: "white"
             }}
           >

@@ -1,5 +1,23 @@
 import React, { PureComponent } from "react";
-import { View, TextInput } from "react-native";
+import styled from "styled-components/native";
+
+const Wrapper = styled.View`
+  width: 90px;
+`;
+
+const StyledInput = styled.TextInput`
+  width: 90px;
+  text-align: center;
+  font-family: "DIN Alternate Bold";
+  font-size: 30px;
+  line-height: 35px;
+`;
+
+const Border = styled.View`
+  background-color: #e0a037;
+  height: 5px;
+  border-radius: 1px;
+`;
 
 class Input extends PureComponent {
   state = {
@@ -31,22 +49,15 @@ class Input extends PureComponent {
     } = this.props;
 
     return (
-      <View style={style}>
-        <TextInput
-          style={{
-            borderBottomColor: "orange",
-            borderBottomWidth: 4,
-            paddingBottom: 5,
-            textAlign: "center",
-            width: 150,
-            fontSize: 36
-          }}
+      <Wrapper>
+        <StyledInput
           value={value}
           onChangeText={value => this.setState({ value })}
           onSubmitEditing={this.handleSubmit}
           {...textInputProps}
         />
-      </View>
+        <Border />
+      </Wrapper>
     );
   }
 }

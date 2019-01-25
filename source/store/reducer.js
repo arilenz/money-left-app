@@ -34,10 +34,12 @@ const values = (
         dailyLimit: payload.value
       };
 
-    case types.RECEIVE_DAY_SUM:
+    case types.RECEIVE_PERIODS:
       return {
         ...state,
-        daySum: payload.sum
+        daySum: payload.daySum,
+        weekSum: payload.weekSum,
+        monthSum: payload.monthSum
       };
 
     default:

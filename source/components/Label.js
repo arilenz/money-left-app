@@ -1,23 +1,9 @@
-import React, { Component } from "react";
-import { View, Text } from "react-native";
+import styled from "styled-components/native";
 
-class Label extends Component {
-  render() {
-    const { style, text } = this.props;
-    return (
-      <View style={style}>
-        <Text
-          style={{
-            width: 300,
-            fontWeight: "bold",
-            textAlign: "center"
-          }}
-        >
-          {text}
-        </Text>
-      </View>
-    );
-  }
-}
-
-export default Label;
+export default styled.Text`
+  width: 300px;
+  text-align: center;
+  font-family: "DIN Alternate Bold";
+  font-size: 20px;
+  line-height: 24px;
+`;

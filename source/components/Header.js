@@ -7,10 +7,13 @@ class Header extends Component {
     return (
       <View
         style={{
+          width: "100%",
+          position: "absolute",
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: 20
+          padding: 24,
+          zIndex: 50
         }}
       >
         <View>{leftAction}</View>

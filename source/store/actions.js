@@ -3,6 +3,8 @@ import {
   getDailyLimit,
   updateDailyLimit,
   getDayRecords,
+  getWeekRecords,
+  getMonthRecords,
   getRecordsTotal,
   addRecord
 } from "../services/db";
@@ -43,20 +45,26 @@ export const requestUpdateDailyLimit = value => async dispatch => {
   return true;
 };
 
-export const requestDaySum = () => async dispatch => {
+export const requestPeriods = () => async dispatch => {
   dispatch({
-    type: types.REQUEST_DAY_SUM
+    type: types.REQUEST_PERIODS
   });
 
-  const records = await getDayRecords();
-  const sum = getRecordsTotal(records);
+  const dayRecords = await getDayRecords();
+  const daySum = getRecordsTotal(dayRecords);
+
+  const weekRecords = await getWeekRecords();
+  const weekSum = getRecordsTotal(weekRecords);
+
+  const monthRecords = await getMonthRecords();
+  const monthSum = getRecordsTotal(monthRecords);
 
   dispatch({
-    type: types.RECEIVE_DAY_SUM,
-    payload: { sum }
+    type: types.RECEIVE_PERIODS,
+    payload: { daySum, weekSum, monthSum }
   });
 
-  return sum;
+  return { daySum, weekSum, monthSum };
 };
 
 export const requestAddRecord = amount => async dispatch => {

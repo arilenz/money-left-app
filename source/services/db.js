@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import { getNow, getMidnight } from "../utils/time";
+import { getNowTimestamp, getDayStart, getWeekStart, getMonthStart } from "../utils/time";
 
 const storeKeys = {
   dailyLimit: "dailyLimit",
@@ -50,7 +50,7 @@ export const addRecord = async amount => {
   try {
     const records = await getAllRecords();
     records.push({
-      timestamp: getNow(),
+      timestamp: getNowTimestamp(),
       amount
     });
     await AsyncStorage.setItem(storeKeys.records, JSON.stringify(records));
@@ -61,10 +61,15 @@ export const addRecord = async amount => {
 
 export const getRecordsByTimeRange = async (from, to) => {
   const records = await getAllRecords();
-  return records.filter(record => record.timestamp > from && record.timestamp < to);
+  return records.filter(record => record.timestamp >= from && record.timestamp <= to);
 };
 
-export const getDayRecords = async () => await getRecordsByTimeRange(getMidnight(), getNow());
+export const getDayRecords = async () =>
+  await getRecordsByTimeRange(getDayStart(), getNowTimestamp());
+export const getWeekRecords = async () =>
+  await getRecordsByTimeRange(getWeekStart(), getNowTimestamp());
+export const getMonthRecords = async () =>
+  await getRecordsByTimeRange(getMonthStart(), getNowTimestamp());
 
 export const getRecordsTotal = records =>
   records.reduce((accumulator, record) => (accumulator += record.amount), 0);

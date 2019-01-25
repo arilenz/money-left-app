@@ -10,7 +10,7 @@ const path = {
 
 class Icon extends Component {
   render() {
-    const { styles = {}, onPress, name, color = "orange" } = this.props;
+    const { styles = {}, onPress, name, color = "#273D3E" } = this.props;
 
     return (
       <View style={styles}>
