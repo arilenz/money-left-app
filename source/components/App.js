@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text } from "react-native";
 import { connect } from "react-redux";
 import debugAsyncStorage, { clear } from "../utils/debugAsyncStorage";
-import { Font } from "expo";
+import { Font, SplashScreen } from "expo";
 
 import Router from "./Router";
 import Screen from "./Screen";
@@ -21,6 +21,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
+      SplashScreen.preventAutoHide();
       debugAsyncStorage();
       await Font.loadAsync({
         "DIN Alternate Bold": require("../../assets/fonts/DIN_Alternate_Bold.ttf"),
@@ -30,6 +31,7 @@ class App extends Component {
       await this.props.requestDailyLimit();
       await this.props.requestPeriods();
       this.setState({ ready: true });
+      SplashScreen.hide();
     } catch (error) {
       console.error(error);
       this.setState({ error: true });
@@ -49,14 +51,12 @@ class App extends Component {
     ) : (
       <Screen>
         <MainContainer>
-          {error ? (
+          {error && (
             <>
               <Text>This app won't work.</Text>
               <Text>Would you like to kick developer?</Text>
               <Text>Contact him</Text>
             </>
-          ) : (
-            <Text>Loading</Text>
           )}
         </MainContainer>
       </Screen>
