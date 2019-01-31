@@ -1,4 +1,4 @@
-export const getNow = () => new Date(2019, 0, 31);
+export const getNow = () => new Date();
 
 export const getNowTimestamp = () => getNow().getTime();
 
